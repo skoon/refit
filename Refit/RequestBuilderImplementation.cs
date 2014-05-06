@@ -13,6 +13,7 @@ using System.Threading;
 
 namespace Refit
 {
+
     public class RequestBuilderFactory : IRequestBuilderFactory
     {
         public IRequestBuilder Create(Type interfaceType)
@@ -54,7 +55,7 @@ namespace Refit
                 throw new ArgumentException("Method must be defined and have an HTTP Method attribute");
             }
             var restMethod = interfaceHttpMethods[methodName];
-            var jsonConverter = GetJsonSerializer<string>();
+            var jsonConverter = GetJsonConverter<string>();
             return paramList => {
                 var ret = new HttpRequestMessage() {
                     Method = restMethod.HttpMethod,
@@ -156,16 +157,11 @@ namespace Refit
             };
         }
 
-        public IJsonConverter<T> GetJsonSerializer<T>()
-        {
-            return new JsonDotNetConverter<T>();
-        }
-
         Func<HttpClient, object[], Task<T>> buildTaskFuncForMethod<T>(RestMethodInfo restMethod)
             where T : class
         {
             var factory = BuildRequestFactoryForMethod(restMethod.Name);
-            var jsonSerializer = GetJsonSerializer<T>();
+            var jsonSerializer = GetJsonConverter<T>();
 
             return async (client, paramList) => {
                 var rq = factory(paramList);
@@ -277,6 +273,19 @@ namespace Refit
                     lock (subscriberList) { subscriberList.Remove(observer); }
                 });
             }
+        }
+
+
+        public IJsonConverter<T> GetJsonConverter<T>()
+        {
+            var settings = RefitSettings.GetJsonSettings();
+            if (settings != null) { 
+                Type[] tArgs = { typeof(T)};
+                var fart = settings.JsonConverter.MakeGenericType(tArgs);
+                var converter = Activator.CreateInstance(fart);
+                return converter as IJsonConverter<T>;
+            }
+            return new JsonDotNetConverter<T>();
         }
     }
 

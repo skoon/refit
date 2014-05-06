@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{252CE1CA-19FA-4445-A3C2-E4D6C80A935A}</ProjectGuid>
+    <ProjectGuid>{8E546370-19E6-4898-AF17-10E2F6FDE782}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Refit</RootNamespace>
-    <AssemblyName>Refit</AssemblyName>
+    <RootNamespace>ServiceStackJsonForRefit</RootNamespace>
+    <AssemblyName>ServiceStackJsonForRefit</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -16,8 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\Net45\</OutputPath>
-    <IntermediateOutputPath>obj\Debug\Net45\</IntermediateOutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,24 +24,17 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\Net45\</OutputPath>
-    <IntermediateOutputPath>obj\Release\Net45\</IntermediateOutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core">
-      <HintPath>..\ext\Net45\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\ext\Net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="ServiceStack.Text">
+      <HintPath>..\packages\ServiceStack.Text.4.0.19\lib\net40\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,24 +42,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CastleRestService.cs" />
-    <Compile Include="JsonConverter.cs" />
-    <Compile Include="JsonSettings.cs" />
-    <Compile Include="RefitSettings.cs" />
-    <Compile Include="RequestBuilderImplementation.cs" />
-    <Compile Include="Utility.cs" />
+    <Compile Include="ServiceStackConverter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Refit-Portable.csproj">
-      <Project>{e315020f-33bc-4d85-bc6e-8346f06f1112}</Project>
-      <Name>Refit-Portable</Name>
+    <ProjectReference Include="..\Refit\Refit-Net45.csproj">
+      <Project>{252ce1ca-19fa-4445-a3c2-e4d6c80a935a}</Project>
+      <Name>Refit-Net45</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.8\tools\Microsoft.Bcl.Build.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
