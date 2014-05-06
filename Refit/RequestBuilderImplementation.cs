@@ -54,7 +54,7 @@ namespace Refit
                 throw new ArgumentException("Method must be defined and have an HTTP Method attribute");
             }
             var restMethod = interfaceHttpMethods[methodName];
-
+            var jsonConverter = GetJsonSerializer<string>();
             return paramList => {
                 var ret = new HttpRequestMessage() {
                     Method = restMethod.HttpMethod,
@@ -78,7 +78,7 @@ namespace Refit
                         } else if (stringParam != null) {
                             ret.Content = new StringContent(stringParam);
                         } else {
-                            ret.Content = new StringContent(JsonConvert.SerializeObject(paramList[i]), Encoding.UTF8, "application/json");
+                            ret.Content = new StringContent(jsonConverter.serialize(paramList[i]), Encoding.UTF8, "application/json");
                         }
 
                         continue;
@@ -156,10 +156,16 @@ namespace Refit
             };
         }
 
+        public IJsonConverter<T> GetJsonSerializer<T>()
+        {
+            return new JsonDotNetConverter<T>();
+        }
+
         Func<HttpClient, object[], Task<T>> buildTaskFuncForMethod<T>(RestMethodInfo restMethod)
             where T : class
         {
             var factory = BuildRequestFactoryForMethod(restMethod.Name);
+            var jsonSerializer = GetJsonSerializer<T>();
 
             return async (client, paramList) => {
                 var rq = factory(paramList);
@@ -175,7 +181,7 @@ namespace Refit
                     return content as T;
                 }
 
-                return JsonConvert.DeserializeObject<T>(content);
+                return jsonSerializer.Deserialize(content);
             };
         }
 
